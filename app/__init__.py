@@ -9,18 +9,18 @@ load_dotenv()
 db = SQLAlchemy()
 migrate = Migrate()
 
+
 def create_app():
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL")
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     db.init_app(app)
     migrate.init_app(app, db)
 
     # Register blueprints here
-    from app.routes import user_routes
-    app.register_blueprint(user_routes.user_bp)
+    from app.routes import student_routes
+
+    app.register_blueprint(student_routes.student_bp)
 
     return app
-
-
