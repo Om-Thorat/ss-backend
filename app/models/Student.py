@@ -10,6 +10,7 @@ class Student(db.Model):
     Phone = db.Column(db.String(15))
     Hometown = db.Column(db.String(100))
     BloodGroup = db.Column(db.String(5))
+    HostelName = db.Column(db.String(100), db.ForeignKey("hostel.Name"), nullable=True)
 
     StudentCourses = db.relationship("StudentCourses", backref="student", lazy=True)
     ClubMemberships = db.relationship("ClubMembers", backref="student", lazy=True)
@@ -26,4 +27,5 @@ class Student(db.Model):
             "Phone": self.Phone,
             "Hometown": self.Hometown,
             "BloodGroup": self.BloodGroup,
+            "HostelName": self.HostelName,
         }
