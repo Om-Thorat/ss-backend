@@ -9,8 +9,10 @@ class Courses(db.Model):
     Duration = db.Column(db.Integer, nullable=False)
     Credit = db.Column(db.Integer, nullable=False)
     Elective = db.Column(db.Boolean, default=False)
-    CR = db.Column(db.Integer, db.ForeignKey('student.RollNo'), nullable=False)
-    Department = db.Column(db.String(100), db.ForeignKey('department.Name'), nullable=False)
+    CR = db.Column(db.Integer, db.ForeignKey("student.RollNo"), nullable=False)
+    Department = db.Column(db.String(100), db.ForeignKey("department.Name"), nullable=False)
+
+    StudentCourses = db.relationship("StudentCourses", backref="course", lazy=True)
 
     def __repr__(self):
         return f"<Courses {self.Name}>"
