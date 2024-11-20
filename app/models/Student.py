@@ -12,6 +12,7 @@ class Student(db.Model):
     BloodGroup = db.Column(db.String(5))
 
     StudentCourses = db.relationship("StudentCourses", backref="student", lazy=True)
+    ClubMemberships = db.relationship("ClubMembers", backref="student", lazy=True)
 
     def __repr__(self):
         return f"<Student {self.Name}>"
