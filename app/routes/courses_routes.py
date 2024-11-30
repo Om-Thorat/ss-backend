@@ -5,6 +5,7 @@ from app.models.StudentCourses import StudentCourses
 from app import db
 from sqlalchemy import text
 
+
 courses_bp = Blueprint("courses", __name__, url_prefix="/courses")
 
 

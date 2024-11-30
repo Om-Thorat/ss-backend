@@ -37,8 +37,8 @@ def search_student():
         query += ' "Name" ILIKE :name'
         params["name"] = f"%{name}%"
     elif rollno:
-        query += ' "RollNo" ILIKE :rollno'
-        params["rollno"] = rollno
+        query += ' "RollNo" ILIKE :rollno ORDER BY "RollNo"'
+        params["rollno"] = f"%{rollno}%"
 
     with db.engine.connect() as conn:
         result = conn.execute(text(query), params)
