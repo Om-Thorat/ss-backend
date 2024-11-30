@@ -27,12 +27,23 @@ def create_student_api():
 @student_bp.route("/search", methods=["POST", "GET"])
 def search_student():
     name = request.args.get("name")
-    if not name:
-        return jsonify({"error": "Name parameter is required"}), 400
+    rollno = request.args.get("rollno")
+    if not name and not rollno:
+        return jsonify({"error": "Name or Rollno parameter is required"}), 400
 
-    query = text('SELECT * FROM student WHERE "Name" ILIKE :name')
+    query = "SELECT * FROM student WHERE"
+    params = {}
+    if name:
+        query += ' "Name" ILIKE :name'
+        params["name"] = f"%{name}%"
+    elif rollno:
+        query += ' "RollNo" ILIKE :rollno'
+        params["rollno"] = rollno
+
     with db.engine.connect() as conn:
-        result = conn.execute(query, {"name": f"%{name}%"})
+        result = conn.execute(text(query), params)
         students = [row._asdict() for row in result]
 
     return jsonify(students)
+
+
