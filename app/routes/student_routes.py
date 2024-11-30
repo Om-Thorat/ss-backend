@@ -1,7 +1,8 @@
-from flask import Blueprint, jsonify, request, render_template, redirect, url_for
-from app.models.Student import Student
-from app import db
+from flask import Blueprint, jsonify, redirect, render_template, request, url_for
 from sqlalchemy import text
+
+from app import db
+from app.models.Student import Student
 
 student_bp = Blueprint("student", __name__, url_prefix="/student")
 
@@ -10,7 +11,7 @@ student_bp = Blueprint("student", __name__, url_prefix="/student")
 def get_students_api():
     with db.engine.connect() as conn:
         result = conn.execute(text("SELECT * FROM student"))
-        students = [str(row) for row in result]
+        students = [row._asdict() for row in result]
     return jsonify(students)
 
 
@@ -23,13 +24,15 @@ def create_student_api():
     return "Sucessfully added student", 201
 
 
-@student_bp.route("/search", methods=["POST"])
+@student_bp.route("/search", methods=["POST", "GET"])
 def search_student():
-    print(request.args)
     name = request.args.get("name")
+    if not name:
+        return jsonify({"error": "Name parameter is required"}), 400
+
+    query = text('SELECT * FROM student WHERE "Name" ILIKE :name')
     with db.engine.connect() as conn:
-        result = conn.execute(
-            text('SELECT * FROM student WHERE "Name" LIKE :name'), {"name": f"%{name}%"}
-        )
-        student = [dict(row._mapping) for row in result]
-    return jsonify(student)
+        result = conn.execute(query, {"name": f"%{name}%"})
+        students = [row._asdict() for row in result]
+
+    return jsonify(students)
