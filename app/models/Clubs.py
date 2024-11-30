@@ -1,15 +1,15 @@
 from app import db
 
 
-
 class Clubs(db.Model):
     __tablename__ = "clubs"
     Name = db.Column(db.String(100), primary_key=True)
-    Type = db.Column(db.String(50), nullable=False)
-    Founded = db.Column(db.Date, nullable=False)
-    Mail = db.Column(db.String(100), unique=True, nullable=False)
-    Coordinator = db.Column(db.Integer, db.ForeignKey("student.RollNo"), nullable=False)
-    Co_Coordinator = db.Column(db.Integer, db.ForeignKey("student.RollNo"), nullable=True)
+    Website = db.Column(db.String(255), nullable=True)
+    Email = db.Column(db.String(100), unique=True, nullable=False)
+    Counselor_Name = db.Column(db.String(100), nullable=False)
+    Counselor_Phone = db.Column(db.String(15), nullable=False)
+    Counselor_Email = db.Column(db.String(100), unique=True, nullable=False)
+    Coordinator = db.Column(db.String(15), db.ForeignKey("student.RollNo", ondelete="RESTRICT"), nullable=False)
 
     Members = db.relationship("ClubMembers", backref="club", lazy=True)
 
@@ -19,9 +19,10 @@ class Clubs(db.Model):
     def to_dict(self):
         return {
             "Name": self.Name,
-            "Type": self.Type,
-            "Founded": self.Founded,
-            "Mail": self.Mail,
+            "Website": self.Website,
+            "Email": self.Email,
+            "Counselor_Name": self.Counselor_Name,
+            "Counselor_Phone": self.Counselor_Phone,
+            "Counselor_Email": self.Counselor_Email,
             "Coordinator": self.Coordinator,
-            "Co_Coordinator": self.Co_Coordinator,
         }
