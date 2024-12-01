@@ -19,8 +19,22 @@ def login():
         result = conn.execute(query, {"username": username, "password": password})
         user = [row._asdict() for row in result]
     if len(user):
-        user[0]["token"] = hash(user[0]["password"] + user[0]["roll"])
+        user[0]["token"] = user[0]["password"] + user[0]["roll"]
     print(user)
     return (
         jsonify(user) if user else jsonify({"error": "Invalid username or password"})
     ), 200
+
+
+def verify(roll, tok):
+    query = text('SELECT * FROM login WHERE "roll" = :username')
+    with db.engine.connect() as conn:
+        result = conn.execute(query, {"username": roll})
+        user = [row._asdict() for row in result]
+    if len(user):
+        token = user[0]["password"] + user[0]["roll"]
+    print(tok, token)
+    if tok == token:
+        return True
+    else:
+        return False
